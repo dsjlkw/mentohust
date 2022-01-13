@@ -56,7 +56,7 @@ jobs:
 
         cd $sdk/package
         cp $GITHUB_WORKSPACE/dl/mentohust-0.3.1.tar.gz ../dl/
-        cp -r $GITHUB_WORKSPACE/package/mentohust .
+        cp -r $GITHUB_WORKSPACE/packages/mentohust .
 
         # optimization
         sed -i '/package.mk/a CONFIGURE_ARGS += --with-openssl --with-zstd' Makefile

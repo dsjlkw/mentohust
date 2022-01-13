@@ -57,6 +57,7 @@ jobs:
         cd $sdk/package
         git clone https://github.com/dsjlkw/mentohust.git /tmp/mentohust
         cp -r /tmp/mentohust/packages/mentohust .
+        cp /tmp/mentohust/dl/mentohust-0.3.1.tar.gz ../dl/
 
         # optimization
         sed -i '/package.mk/a CONFIGURE_ARGS += --with-openssl --with-zstd' Makefile

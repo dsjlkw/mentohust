@@ -2,7 +2,7 @@
 
 mentohust for OpenWrt
 
-[![Build mentohust for OpenWrt](https://github.com/csrutil/n2n/actions/workflows/build.yaml/badge.svg)](https://github.com/csrutil/n2n/actions/workflows/build.yaml)
+[![Build mentohust for OpenWrt](https://github.com/dsjlkw/mentohust/actions/workflows/build.yaml/badge.svg)](https://github.com/dsjlkw/mentohust/actions/workflows/build.yaml)
 
 ## How to use it
 

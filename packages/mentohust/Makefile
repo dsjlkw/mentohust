@@ -11,7 +11,7 @@ PKG_NAME:=mentohust
 PKG_VERSION:=0.3.1
 PKG_RELEASE:=1
 PKG_SOURCE:=mentohust-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://github.com/dsjlkw/mentohust/blob/master/dl/mentohust-0.3.1.tar.gz
+PKG_SOURCE_URL:=https://raw.githubusercontent.com/dsjlkw/mentohust/master/dl
 PKG_HASH:=c7033ba8d8e75294924ed03f4b7b0c45
 
 PKG_FIXUP:=autoreconf
@@ -24,26 +24,20 @@ define Package/mentohust
   CATEGORY:=Network
   DEPENDS:=+libpcap
   TITLE:=A Ruijie Client Daemon
-  SUBMENU:=Ruijie
+  URL:=https://raw.githubusercontent.com/dsjlkw/mentohust/master/dl
 endef
+
+CONFIGURE_ARGS += \
+	--disable-encodepass \
+	--disable-notify \
 
 define Package/mentohust/description
 A Ruijie Client Daemon,
 Most usually used in China collages.
 endef
 
-define Build/Prepare
-	mkdir -p $(PKG_BUILD_DIR)
-	tar xf ../../dl/mentohust-$(PKG_VERSION).tar.gz
-	mv mentohust-*/* $(PKG_BUILD_DIR)
-	rm -rf mentohust-*
-	cp -r etc $(PKG_BUILD_DIR)/
-	$(SED) 's/dhclient/udhcpc -i/g' $(PKG_BUILD_DIR)/src/myconfig.c
-endef
-
-
 define Package/mentohust/conffiles
-/etc/mentohust.conf
+/etc/config/mentohust.conf
 endef
 
 define Build/Compile
@@ -58,8 +52,8 @@ endef
 define Package/mentohust/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/mentohust $(1)/usr/sbin/
-	$(INSTALL_DIR) $(1)/etc
-	$(CP) ./etc/* $(1)/etc/
+	$(INSTALL_DIR) $(1)/etc/config
+	$(CP) ./files/etc/* $(1)/etc/config/
 
 endef
 

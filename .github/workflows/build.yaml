@@ -55,8 +55,8 @@ jobs:
         sdk=$(basename $url | awk -F '.tar.xz' '{ print $1 }')
 
         cd $sdk/package
-        cp $GITHUB_WORKSPACE/dl/mentohust-0.3.1.tar.gz ../dl/
-        cp -r $GITHUB_WORKSPACE/package/mentohust .
+        git clone https://github.com/dsjlkw/mentohust.git /tmp/mentohust
+        cp -r /tmp/mentohust/packages/mentohust .
 
         # optimization
         sed -i '/package.mk/a CONFIGURE_ARGS += --with-openssl --with-zstd' Makefile

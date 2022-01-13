@@ -10,10 +10,11 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=mentohust
 PKG_VERSION:=0.3.1
 PKG_RELEASE:=1
-
+PKG_SOURCE:=mentohust-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://github.com/dsjlkw/mentohust/blob/master/dl/mentohust-0.3.1.tar.gz
+PKG_HASH:=c7033ba8d8e75294924ed03f4b7b0c45
 
 PKG_FIXUP:=autoreconf
-
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
@@ -23,7 +24,6 @@ define Package/mentohust
   CATEGORY:=Network
   DEPENDS:=+libpcap
   TITLE:=A Ruijie Client Daemon
-  URL:=mentohust-0.3.1.tar.gz
   SUBMENU:=Ruijie
 endef
 
@@ -34,10 +34,10 @@ endef
 
 define Build/Prepare
 	mkdir -p $(PKG_BUILD_DIR)
-	tar xf ../../dl/mentohust-0.3.1.tar.gz 
-	mv mentohust-0.3.1/* $(PKG_BUILD_DIR)/
+	tar xf ../../dl/mentohust-$(PKG_VERSION).tar.gz
+	mv mentohust-*/* $(PKG_BUILD_DIR)
+	rm -rf mentohust-*
 	cp -r etc $(PKG_BUILD_DIR)/
-	rm -rf mentohust-0.3.1
 	$(SED) 's/dhclient/udhcpc -i/g' $(PKG_BUILD_DIR)/src/myconfig.c
 endef
 
@@ -59,7 +59,7 @@ define Package/mentohust/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/mentohust $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/etc/mentohust.conf $(1)/etc/mentohust.conf
+	$(CP) ./etc/* $(1)/etc/
 
 endef
 

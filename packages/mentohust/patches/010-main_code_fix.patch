@@ -1,13 +1,49 @@
 --- a/src/myconfig.c
 +++ b/src/myconfig.c
-@@ -36,8 +36,8 @@ static const char *PACKAGE_BUGREPORT = "
+@@ -36,10 +36,10 @@ static const char *PACKAGE_BUGREPORT = "
  #define D_DAEMONMODE		0	/* 默认daemon模式 */
  #define D_MAXFAIL			0	/* 默认允许失败次数 */
  
 -static const char *D_DHCPSCRIPT = "dhclient";	/* 默认DHCP脚本 */
 -static const char *CFG_FILE = "/etc/mentohust.conf";	/* 配置文件 */
+-static const char *LOG_FILE = "/tmp/mentohust.log";	/* 日志文件 */
+-static const char *LOCK_FILE = "/var/run/mentohust.pid";	/* 锁文件 */
 +static const char *D_DHCPSCRIPT = "udhcpc -i";	/* 默认DHCP脚本 */
 +static const char *CFG_FILE = "/etc/config/mentohust.conf";	/* 配置文件 */
- static const char *LOG_FILE = "/tmp/mentohust.log";	/* 日志文件 */
- static const char *LOCK_FILE = "/var/run/mentohust.pid";	/* 锁文件 */
++static const char *LOG_FILE = "/tmp/mentohust";	/* 日志文件 */
++static const char *LOCK_FILE = "/var/run/mentohust";	/* 锁文件 */
  #define LOCKMODE (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)	/* 创建掩码 */
+ 
+ #ifndef NO_NOTIFY
+@@ -538,7 +538,13 @@ static void saveConfig(int daemonMode)
+ static void checkRunning(int exitFlag, int daemonMode)
+ {
+ 	struct flock fl;
+-	lockfd = open (LOCK_FILE, O_RDWR|O_CREAT, LOCKMODE);
++	char lockfile[128];
++	int ret = snprintf(lockfile, 128, "%s.%s.%s", LOCK_FILE, nic, "pid");
++	if(ret<0) {
++		perror("!! 内存不足");
++		goto error_exit;
++	}
++	lockfd = open (lockfile, O_RDWR|O_CREAT, LOCKMODE);
+ 	if (lockfd < 0) {
+ 		perror("!! 打开锁文件失败");	/* perror真的很好啊，以前没用它真是太亏了 */
+ 		goto error_exit;
+@@ -571,8 +577,14 @@ static void checkRunning(int exitFlag, i
+ 		if (daemon(0, (daemonMode+1)%2))
+ 			perror("!! 后台运行失败");
+ 		else if (daemonMode == 3) {
+-			freopen(LOG_FILE, "w", stdout);
+-			freopen(LOG_FILE, "a", stderr);
++			char logfile[128];
++			int ret=snprintf(logfile, 128, "%s.%s.%s", LOG_FILE, nic, "log");
++			if(ret<0){
++				perror("!! 内存不足");
++				goto error_exit;
++			}
++			freopen(logfile, "w", stdout);
++			freopen(logfile, "a", stderr);
+ 		}
+ 	}
+ 	fl.l_type = F_WRLCK;

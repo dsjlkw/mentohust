@@ -25,6 +25,7 @@ jobs:
           - https://downloads.openwrt.org/releases/21.02.1/targets/ipq40xx/generic/openwrt-sdk-21.02.1-ipq40xx-generic_gcc-8.4.0_musl_eabi.Linux-x86_64.tar.xz
           - https://downloads.openwrt.org/releases/21.02.1/targets/ramips/mt76x8/openwrt-sdk-21.02.1-ramips-mt76x8_gcc-8.4.0_musl.Linux-x86_64.tar.xz
           - https://downloads.openwrt.org/releases/21.02.1/targets/ath79/generic/openwrt-sdk-21.02.1-ath79-generic_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+          - https://downloads.openwrt.org/releases/21.02.1/targets/ramips/mt7621/openwrt-sdk-21.02.1-ramips-mt7621_gcc-8.4.0_musl.Linux-x86_64.tar.xz
 
     steps:
     - name: Checkout
@@ -55,7 +56,7 @@ jobs:
         sdk=$(basename $url | awk -F '.tar.xz' '{ print $1 }')
 
         cd $sdk/package
-        git clone https://github.com/dsjlkw/mentohust.git /tmp/mentohust
+        git clone -b multi-run https://github.com/dsjlkw/mentohust.git /tmp/mentohust
         cp -r /tmp/mentohust/packages/mentohust .
         cp /tmp/mentohust/dl/mentohust-0.3.1.tar.gz ../dl/
 

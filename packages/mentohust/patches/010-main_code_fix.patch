@@ -9,12 +9,21 @@
 -static const char *LOG_FILE = "/tmp/mentohust.log";	/* 日志文件 */
 -static const char *LOCK_FILE = "/var/run/mentohust.pid";	/* 锁文件 */
 +static const char *D_DHCPSCRIPT = "udhcpc -i";	/* 默认DHCP脚本 */
-+static const char *CFG_FILE = "/etc/config/mentohust.conf";	/* 配置文件 */
++static const char *CFG_FILE = "/etc/config/mentohust";	/* 配置文件 */
 +static const char *LOG_FILE = "/tmp/mentohust";	/* 日志文件 */
 +static const char *LOCK_FILE = "/var/run/mentohust";	/* 锁文件 */
  #define LOCKMODE (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)	/* 创建掩码 */
  
  #ifndef NO_NOTIFY
+@@ -211,7 +211,7 @@ void initConfig(int argc, char **argv)
+ 		((u_char *)&gateway)[3] = 0x02;
+ 	}
+ 	if (dhcpScript[0] == '\0')	/* 未填写DHCP脚本？ */
+-		strcpy(dhcpScript, D_DHCPSCRIPT);
++		snprintf(dhcpScript, MAX_PATH, "%s %s", D_DHCPSCRIPT, nic);
+ 	newBuffer();
+ 	printConfig();
+ 	if (fillHeader()==-1 || openPcap()==-1) {	/* 获取IP、MAC，打开网卡 */
 @@ -538,7 +538,13 @@ static void saveConfig(int daemonMode)
  static void checkRunning(int exitFlag, int daemonMode)
  {

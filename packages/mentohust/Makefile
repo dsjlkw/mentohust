@@ -50,11 +50,10 @@ define Build/Compile
 endef
 
 define Package/mentohust/install
+	$(CP) ./files/* $(1)/
+
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/mentohust $(1)/usr/sbin/
-	$(INSTALL_DIR) $(1)/etc/config
-	$(CP) ./files/etc/* $(1)/etc/config/
-
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
